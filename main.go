@@ -6,16 +6,23 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func welcome(c *fiber.Ctx) error {
-	return c.SendString("Welcome to the fiberApp2")
-}
-func Setuproutes(app *fiber.App) error {
-	app.Get("/", welcome)
+func Setuproutes(app *fiber.App) {
+	//user endpoints
+
 	app.Get("/api/getusers", routes.GetUsers)
 	app.Get("/api/getuser/:id", routes.GetUser)
 	app.Post("/api/createuser", routes.CreateUser)
 	app.Delete("/api/deleteuser/:id", routes.DeleteUser)
-	return nil
+	app.Put("/api/updateuser/:id", routes.UpdateUser)
+
+	//product endpoints
+
+	app.Get("/api/getproducts", routes.GetProducts)
+	app.Get("/api/getproduct/:id", routes.GetProduct)
+	app.Post("/api/createproduct", routes.CreateProduct)
+	app.Delete("/api/deleteproduct/:id", routes.DeleteProduct)
+	app.Put("/api/updateproduct/:id", routes.UpdateProduct)
+
 }
 func main() {
 	database.ConnectDb()
