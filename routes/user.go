@@ -17,7 +17,13 @@ type User struct {
 func CreateResponseUser(userModel models.User) User {
 	return User{ID: userModel.ID, FirstName: userModel.FirstName, LastName: userModel.LastName}
 }
-
+func findUser(id int, user *models.User) error {
+	database.Database.Db.Find(&user, "id=?", id)
+	if user.ID == 0 {
+		return errors.New("user does not exist")
+	}
+	return nil
+}
 func GetUsers(c *fiber.Ctx) error {
 	var users []models.User
 	database.Database.Db.Find(&users)
@@ -86,11 +92,4 @@ func UpdateUser(c *fiber.Ctx) error {
 	database.Database.Db.Save(&user)
 	responseUser := CreateResponseUser(user)
 	return c.Status(200).JSON(responseUser)
-}
-func findUser(id int, user *models.User) error {
-	database.Database.Db.Find(&user, "id=?", id)
-	if user.ID == 0 {
-		return errors.New("user does not exist")
-	}
-	return nil
 }

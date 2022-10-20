@@ -17,6 +17,13 @@ type Product struct {
 func CreateResponseProduct(productModel models.Product) Product {
 	return Product{ID: productModel.ID, Name: productModel.Name, Serial_number: productModel.SerialNumber}
 }
+func findProduct(id int, product *models.Product) error {
+	database.Database.Db.Find(&product, "id=?", id)
+	if product.ID == 0 {
+		return errors.New("product does not exist")
+	}
+	return nil
+}
 func GetProducts(c *fiber.Ctx) error {
 	var products []models.Product
 	var responseProducts []Product
@@ -84,11 +91,4 @@ func UpdateProduct(c *fiber.Ctx) error {
 	database.Database.Db.Save(product)
 	responseProduct := CreateResponseProduct(product)
 	return c.Status(200).JSON(responseProduct)
-}
-func findProduct(id int, product *models.Product) error {
-	database.Database.Db.Find(&product, "id=?", id)
-	if product.ID == 0 {
-		return errors.New("product does not exist")
-	}
-	return nil
 }
